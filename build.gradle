@@ -1,11 +1,13 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '2.2.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 }
 
 group 'org.example'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.11
 
 repositories {
     mavenLocal()
@@ -13,13 +15,27 @@ repositories {
 }
 
 dependencies {
+    // Spring
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Selenium
     implementation 'com.codeborne:selenide:5.5.0'
     implementation 'aermicioi.utils:selenide-utils:1.0-SNAPSHOT'
 
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    // Utils
+    implementation 'com.google.guava:guava:29.0-jre'
 
-    testCompile 'junit:junit:4.12'
-    testCompileOnly 'org.projectlombok:lombok:1.18.12'
+    // Logging
+    implementation 'org.slf4j:slf4j-api:1.7.28'
+    implementation 'ch.qos.logback:logback-core:1.2.3'
+
+    // Testing
+    testImplementation 'junit:junit:4.12'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+
+    // Lombok
+    implementation 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    testImplementation 'org.projectlombok:lombok:1.18.12'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 }

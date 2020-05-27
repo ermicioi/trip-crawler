@@ -5,7 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 
 import java.util.List;
 
-public class ResultPage {
+public class ResultsPage {
 
     private SelenideElement loading$ = Selenide.$(".sr-usp-overlay__loading");
     private SelenideElement resultsTable$ = Selenide.$("#search_results_table");

@@ -1,5 +1,6 @@
 package aermicioi.tripcrawler.crawler.com.booking;
 
+import aermicioi.tripcrawler.crawler.SearchRequest;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;

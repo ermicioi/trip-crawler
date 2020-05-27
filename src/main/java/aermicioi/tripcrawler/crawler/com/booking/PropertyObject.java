@@ -1,5 +1,6 @@
 package aermicioi.tripcrawler.crawler.com.booking;
 
+import aermicioi.tripcrawler.crawler.PropertyModel;
 import com.codeborne.selenide.SelenideElement;
 
 import java.math.BigDecimal;
@@ -23,8 +24,8 @@ public class PropertyObject {
         this.propertyName$ = contentContainer$.$(".sr-hotel__name");
     }
 
-    public PropertyDto readProperty() {
-        final PropertyDto.PropertyDtoBuilder builder = PropertyDto.builder();
+    public PropertyModel readProperty() {
+        final PropertyModel.PropertyModelBuilder builder = PropertyModel.builder();
 
         builder.photo(this.photo$.attr("src"))
                 .name(this.propertyName$.getText())

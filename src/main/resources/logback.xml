@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration debug="true">
+
+    <property name="LOGGING_DIR" value="logs" />
+    <property name="LOGGING_PATTERN" value="%d{HH:mm:ss.SSS}|%-24thread|%-5level|%-50logger{36}|%-4X{teamId}|%msg%n" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>${LOGGING_PATTERN}</Pattern>
+        </layout>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGGING_DIR}/application.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGGING_DIR}/tripcrawler.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>90</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>${LOGGING_PATTERN}</Pattern>
+        </encoder>
+    </appender>
+
+    <logger name="aermicioi.tripcrawler" level="TRACE"/>
+    <logger name="com.gargoylesoftware" level="OFF" />
+    <logger name="org.springframework" level="INFO" />
+
+    <root level="WARN">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>

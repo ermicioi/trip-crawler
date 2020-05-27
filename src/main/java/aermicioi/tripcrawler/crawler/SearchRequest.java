@@ -1,4 +1,4 @@
-package aermicioi.tripcrawler.crawler.com.booking;
+package aermicioi.tripcrawler.crawler;
 
 import lombok.Builder;
 import lombok.Getter;
