@@ -1,11 +1,9 @@
 package aermicioi.tripcrawler;
 
-import aermicioi.tripcrawler.crawler.PartyCrawlerService;
-import aermicioi.tripcrawler.crawler.com.booking.BookingComPartyCrawlerService;
+import aermicioi.tripcrawler.crawler.com.booking.BookingComCrawlerService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.core.task.TaskExecutor;
 
 import java.util.List;
 
@@ -13,7 +11,7 @@ import java.util.List;
 public class TripCrawlerConfiguration {
 
     @Bean
-    public FlexedTripCrawlerService fixedTripCrawlerService() {
+    public FlexedTripCrawlerService flexedTripCrawlerService() {
         final SimpleAsyncTaskExecutor simpleAsyncTaskExecutor = new SimpleAsyncTaskExecutor();
         simpleAsyncTaskExecutor.setConcurrencyLimit(4);
         simpleAsyncTaskExecutor.setDaemon(true);
@@ -22,8 +20,14 @@ public class TripCrawlerConfiguration {
         return new FlexedTripCrawlerService(
                 new SimpleAsyncTaskExecutor(),
                 List.of(
-                        new BookingComPartyCrawlerService()
-                ));
+                        new BookingComCrawlerService()
+                ),
+                new FlexedResultsCsvExportService());
+    }
+
+    @Bean
+    public FlexedResultsCsvExportService flexedResultsCsvExportService() {
+        return new FlexedResultsCsvExportService();
     }
 
 }

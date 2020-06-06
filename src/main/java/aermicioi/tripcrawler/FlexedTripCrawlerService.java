@@ -1,10 +1,12 @@
 package aermicioi.tripcrawler;
 
-import aermicioi.tripcrawler.crawler.PartyCrawlerService;
+import aermicioi.tripcrawler.crawler.CrawlerService;
 import aermicioi.tripcrawler.crawler.SearchRequest;
+import aermicioi.tripcrawler.crawler.SearchResult;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -17,11 +19,17 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -59,43 +67,36 @@ public class FlexedTripCrawlerService {
     }
 
     private final TaskExecutor crawlerTaskExecutor;
-    private final List<PartyCrawlerService> partyCrawlerServices;
+    private final List<CrawlerService> partyCrawlerServices;
+    private final FlexedResultsCsvExportService exportService;
 
-    public void search(@Valid final FlexedTripSearchRequest searchRequest) {
-        doSearch(searchRequest);
-    }
-
-    private void doSearch(final FlexedTripSearchRequest searchRequest) {
-        final List<Pair<LocalDate, LocalDate>> periods = this.computeSearchPeriods(
+    @SneakyThrows(IOException.class)
+    public void search(@Valid @NotNull final FlexedTripSearchRequest searchRequest) {
+        final List<Pair<LocalDate, LocalDate>> periods = computeSearchPeriods(
                 searchRequest.getStartDate(),
                 searchRequest.getEndDate(),
                 searchRequest.getLengthOfStay());
         log.debug("Computed {} periods", periods.size());
 
-        final CountDownLatch countDownLatch = new CountDownLatch(periods.size() * partyCrawlerServices.size());
+        final int permutations = periods.size() * partyCrawlerServices.size();
+        log.debug("Computed permutations: {}", permutations);
+
+        final List<SearchResult> results = new ArrayList<>(permutations);
+        final CountDownLatch countDownLatch = new CountDownLatch(permutations);
         periods.forEach(period -> {
-            final SearchRequest localSearchRequest = SearchRequest.builder()
+            final SearchRequest periodSearchRequest = SearchRequest.builder()
                     .checkInDate(period.getLeft())
                     .checkOutDate(period.getRight())
-                    .location(searchRequest.location)
+                    .location(searchRequest.getLocation())
                     .adultsCount(searchRequest.getAdultsCount())
                     .children(searchRequest.getChildren())
                     .roomsCount(searchRequest.getRoomsCount())
                     .build();
 
-            partyCrawlerServices.forEach(
-                    service -> crawlerTaskExecutor.execute(() -> {
-                        log.debug("Searching at party {} for dates {} - {}",
-                                service.getClass().getSimpleName(),
-                                localSearchRequest.getCheckInDate(),
-                                localSearchRequest.getCheckOutDate());
-
-                        try {
-                            service.search(localSearchRequest);
-                        } finally {
-                            countDownLatch.countDown();
-                        }
-                    }));
+            search(periodSearchRequest, searchResult -> {
+                results.add(searchResult);
+                countDownLatch.countDown();
+            });
         });
 
         try {
@@ -103,6 +104,10 @@ public class FlexedTripCrawlerService {
         } catch (InterruptedException e) {
             log.error("Execution interruption", e);
         }
+
+        exportService.export(results, new FileWriter(String.format(
+                "tripcrawler-%s.csv",
+                LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))));
     }
 
     private List<Pair<LocalDate, LocalDate>> computeSearchPeriods(
@@ -122,6 +127,16 @@ public class FlexedTripCrawlerService {
         return IntStream.range(0, periodsCount)
                 .mapToObj(i -> new ImmutablePair<>(startDate.plusDays(i), startDate.plusDays(i + lengthOfStay)))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    private void search(final SearchRequest searchRequest, final Consumer<SearchResult> callback) {
+        partyCrawlerServices.forEach(
+                service -> crawlerTaskExecutor.execute(() -> {
+                    log.debug("Searching at party {} for request {}",
+                            service.getClass().getSimpleName(),
+                            searchRequest);
+                    callback.accept(service.search(searchRequest));
+                }));
     }
 
 }

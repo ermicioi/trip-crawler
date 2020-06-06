@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PropertyObject {
+public class PropertyPageObject {
 
     private final static Pattern PRICE_PATTERN = Pattern.compile("^([\\d]+)");
 
@@ -16,7 +16,7 @@ public class PropertyObject {
     private final SelenideElement contentContainer$;
     private final SelenideElement propertyName$;
 
-    public PropertyObject(SelenideElement root$) {
+    public PropertyPageObject(SelenideElement root$) {
         this.root$ = root$;
         this.photo$ = root$.$(".sr_item_photo .sr_item_photo_link .hotel_image");
 

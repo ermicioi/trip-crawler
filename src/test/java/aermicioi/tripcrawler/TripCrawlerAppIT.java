@@ -12,7 +12,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TripCrawlerAppTest {
+public class TripCrawlerAppIT {
 
     @Autowired
     private FlexedTripCrawlerService flexedTripCrawlerService;
@@ -28,7 +28,6 @@ public class TripCrawlerAppTest {
                 .children(List.of(1))
                 .roomsCount(3)
                 .build());
-        System.out.println("test");
     }
 
 }

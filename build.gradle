@@ -22,6 +22,9 @@ dependencies {
     implementation 'com.codeborne:selenide:5.5.0'
     implementation 'aermicioi.utils:selenide-utils:1.0-SNAPSHOT'
 
+    implementation 'net.sf.supercsv:super-csv:2.4.0'
+    implementation 'net.sf.supercsv:super-csv-java8:2.4.0'
+
     // Utils
     implementation 'com.google.guava:guava:29.0-jre'
 
