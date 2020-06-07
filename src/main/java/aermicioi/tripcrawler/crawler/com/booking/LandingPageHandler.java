@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Slf4j
-public class LandingPage {
+public class LandingPageHandler {
 
     private static final int ADULT_BASE_COUNT = 2;
     private static final int CHILD_BASE_COUNT = 0;
