@@ -10,6 +10,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.time.FmtLocalDate;
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.quote.AlwaysQuoteMode;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
@@ -33,9 +34,13 @@ public class FlexedResultsCsvExportService {
             "Property", "Check In", "Check Out", "Price", "Url"
     };
 
+    private static final CsvPreference CSV_PREF = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
+            .useQuoteMode(new AlwaysQuoteMode())
+            .build();
+
     @SneakyThrows(IOException.class)
     public void export(@NotNull final List<SearchResult> results, final Writer writer) {
-        try (final CsvListWriter csvListWriter = new CsvListWriter(writer, CsvPreference.STANDARD_PREFERENCE)) {
+        try (final CsvListWriter csvListWriter = new CsvListWriter(writer, CSV_PREF)) {
             csvListWriter.writeHeader(HEADERS);
             results.forEach(result ->
                     result.getProperties().forEach(p -> {
