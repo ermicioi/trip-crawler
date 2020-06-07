@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @ToString
 public class PropertyModel {
 
+    private final String url;
     private final String photo;
     private final String name;
     private final BigDecimal price;

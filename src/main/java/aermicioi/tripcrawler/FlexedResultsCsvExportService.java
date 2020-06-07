@@ -12,7 +12,6 @@ import org.supercsv.io.CsvListWriter;
 import org.supercsv.prefs.CsvPreference;
 
 import javax.validation.constraints.NotNull;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.time.LocalDate;
@@ -26,11 +25,12 @@ public class FlexedResultsCsvExportService {
             new org.supercsv.cellprocessor.constraint.NotNull(),
             new FmtLocalDate(),
             new FmtLocalDate(),
-            new FmtNumber("###,###.00")
+            new FmtNumber("###,###.00"),
+            null
     };
 
     private static final String[] HEADERS = new String[]{
-            "Property", "Check In", "Check Out", "Price"
+            "Property", "Check In", "Check Out", "Price", "Url"
     };
 
     @SneakyThrows(IOException.class)
@@ -50,7 +50,8 @@ public class FlexedResultsCsvExportService {
                 property.getName(),
                 checkIn,
                 checkOut,
-                property.getPrice()
+                property.getPrice(),
+                property.getUrl()
         ), PROCESSORS);
     }
 

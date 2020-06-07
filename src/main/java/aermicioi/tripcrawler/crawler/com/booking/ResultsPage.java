@@ -21,8 +21,8 @@ public class ResultsPage {
         final SelenideElement nextAnchor$ = resultsTable$.$("a.paging-next");
         do {
             properties.addAll(properties$.stream()
-                    .map(PropertyPageObject::new)
-                    .map(PropertyPageObject::readProperty)
+                    .map(PropertyObject::new)
+                    .map(PropertyObject::getModel)
                     .collect(Collectors.toList()));
 
             nextAnchor$.scrollIntoView(true);
