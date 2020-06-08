@@ -1,6 +1,5 @@
 package aermicioi.tripcrawler;
 
-import aermicioi.tripcrawler.FlexedTripCrawlerService.FlexedTripSearchRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,11 +3,8 @@ package aermicioi.tripcrawler;
 import aermicioi.tripcrawler.crawler.CrawlerService;
 import aermicioi.tripcrawler.crawler.SearchRequest;
 import aermicioi.tripcrawler.crawler.SearchResult;
-import lombok.Builder;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -15,9 +12,6 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,7 +20,6 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
@@ -37,34 +30,6 @@ import java.util.stream.IntStream;
 @Slf4j
 @Validated
 public class FlexedTripCrawlerService {
-
-    @Builder
-    @Getter
-    @ToString
-    public static class FlexedTripSearchRequest {
-        @NotBlank
-        private final String location;
-
-        @NotNull
-        @FutureOrPresent
-        private final LocalDate startDate;
-
-        @NotNull
-        @FutureOrPresent
-        private final LocalDate endDate;
-
-        @Min(1)
-        private final int lengthOfStay;
-
-        @Min(1)
-        private final int adultsCount;
-
-        @NotNull
-        private final Collection<@Min(0) Integer> children;
-
-        @Min(1)
-        private final int roomsCount;
-    }
 
     private final TaskExecutor crawlerTaskExecutor;
     private final List<CrawlerService> partyCrawlerServices;
