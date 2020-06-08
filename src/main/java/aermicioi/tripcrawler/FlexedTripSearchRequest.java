@@ -2,6 +2,7 @@ package aermicioi.tripcrawler;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Singular;
 import lombok.ToString;
 
 import javax.validation.constraints.FutureOrPresent;
@@ -33,6 +34,7 @@ public class FlexedTripSearchRequest {
     private final int adultsCount;
 
     @NotNull
+    @Singular
     private final Collection<@Min(0) Integer> children;
 
     @Min(1)

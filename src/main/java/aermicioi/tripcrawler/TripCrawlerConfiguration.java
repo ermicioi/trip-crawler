@@ -20,7 +20,7 @@ public class TripCrawlerConfiguration {
         return new FlexedTripCrawlerService(
                 new SimpleAsyncTaskExecutor(),
                 crawlerServices,
-                new FlexedResultsCsvExportService());
+                flexedResultsCsvExportService());
     }
 
     @Bean
